@@ -1,0 +1,35 @@
+services:
+  backend:
+    build: ./backend
+    container_name: samvel-backend
+    ports:
+      - "8001:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:8080,http://frontend:80
+    volumes:
+      - uploads_data:/app/uploads
+      - db_data:/app/data
+    networks:
+      - samvel-network
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: samvel-frontend
+    ports:
+      - "8100:80"
+    depends_on:
+      - backend
+    networks:
+      - samvel-network
+    restart: unless-stopped
+
+networks:
+  samvel-network:
+    driver: bridge
+
+volumes:
+  uploads_data:
+  db_data:
