@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель | SamvelSite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #f1f5f9;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 0.75rem;
+        }
+        .stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: #1e293b;
+            border-radius: 0.5rem;
+            padding: 1rem 1.5rem;
+            border: 1px solid #334155;
+        }
+        .stat-card .number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+        .stat-card .label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1e293b;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+        th {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            background: #0f172a;
+            color: #94a3b8;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #334155;
+        }
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #1e293b;
+            font-size: 0.875rem;
+            color: #cbd5e1;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover td {
+            background: #334155;
+        }
+        .fabric-badge {
+            display: inline-block;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .fabric-satin { background: #1e3a5f; color: #93c5fd; }
+        .fabric-gloss { background: #3b2f2f; color: #fcd34d; }
+        .fabric-matte { background: #2d3b2d; color: #86efac; }
+        .no-contacts {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+        .date {
+            white-space: nowrap;
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Панель управления заявками</h1>
+    
+    <div class="stats">
+        <div class="stat-card">
+            <div class="number">{{ contacts|length }}</div>
+            <div class="label">Всего заявок</div>
+        </div>
+    </div>
+
+    {% if contacts %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Имя</th>
+                <th>Телефон</th>
+                <th>Адрес</th>
+                <th>Тип полотна</th>
+                <th>Лампочки</th>
+                <th>Люстры</th>
+                <th>Трубы</th>
+                <th>Углы</th>
+                <th>Описание</th>
+                <th>Дата</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in contacts %}
+            <tr>
+                <td>{{ c.id }}</td>
+                <td>{{ c.name }}</td>
+                <td>{{ c.phone }}</td>
+                <td>{{ c.address or '—' }}</td>
+                <td>
+                    {% if c.fabric_type %}
+                    <span class="fabric-badge fabric-{{ c.fabric_type }}">{{ c.fabric_type }}</span>
+                    {% else %}—{% endif %}
+                </td>
+                <td>{{ c.spotlight_count }}</td>
+                <td>{{ c.chandelier_count }}</td>
+                <td>{{ c.pipe_count }}</td>
+                <td>{{ c.corner_count }}</td>
+                <td>{{ c.description or '—' }}</td>
+                <td class="date">{{ c.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-contacts">Пока нет заявок</div>
+    {% endif %}
+</body>
+</html>
